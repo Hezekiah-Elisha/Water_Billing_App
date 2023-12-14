@@ -2,7 +2,6 @@ package com.olefaent.waterbilling.data
 
 import com.olefaent.waterbilling.model.LoginRequest
 import com.olefaent.waterbilling.model.LoginResponse
-import com.olefaent.waterbilling.model.UserInfo
 import com.olefaent.waterbilling.network.BillingApiService
 
 interface UserRepository{

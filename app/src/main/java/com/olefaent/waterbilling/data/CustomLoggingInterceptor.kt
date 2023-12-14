@@ -14,7 +14,7 @@ class CustomLoggingInterceptor : Interceptor {
         val response = chain.proceed(request)
 
         // Log the response
-        println("Response: ${response.code}")
+        println("Response: ${response.code} - ${response.message} - ${response.isSuccessful}")
 
         return response
     }

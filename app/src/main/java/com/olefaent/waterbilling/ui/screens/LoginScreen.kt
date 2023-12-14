@@ -93,18 +93,37 @@ fun LoginScreen(navController : NavController, modifier: Modifier = Modifier){
                 userViewModel.setEmail(email)
                 userViewModel.setPassword(password)
 
-                userViewModel.login(
-                    userViewModel.email,
-                    userViewModel.password
+                Log.d("LOGIN", "LoginScreen: Email: ${userViewModel.getTheEmail()}")
+                Log.d("LOGIN", "LoginScreen: password: $password")
+
+                userViewModel.loginUser(
+                    email = email,
+                    password = password
                 )
 
                 Log.d("LOGIN", "LoginScreen: $mState")
 
-                navController.navigate("custom"){
-                    popUpTo("login"){
-                        inclusive = true
+                if (mState is UserState.Success){
+                    Log.d("LOGIN", "LoginScreen: ${mState.loginResponse}")
+
+                    userViewModel.saveAccessToken(mState.loginResponse.accessToken)
+                    userViewModel.setUserLoggedIn(mState.loginResponse.user)
+                    val token = userViewModel.getAccessToken()
+                    val user = userViewModel.getUserLoggedIn()
+
+                    Log.d("LOGIN", "LoginScreen: Access Token: ${mState.loginResponse.accessToken}")
+                    Log.d("LOGIN", "LoginScreen: nAccess Token: $token\n User: $user")
+                    navController.navigate("custom"){
+                        popUpTo("login"){
+                            inclusive = true
+                        }
                     }
+
+                } else if (mState is UserState.Error){
+                    Log.d("LOGIN", "LoginScreen: ${mState.message}")
                 }
+
+
             }
         ) {
             Text(text = "Login")

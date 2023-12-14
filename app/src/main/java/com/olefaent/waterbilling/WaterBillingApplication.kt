@@ -1,6 +1,7 @@
 package com.olefaent.waterbilling
 
 import android.app.Application
+import android.content.Context
 import com.olefaent.waterbilling.data.AppContainer
 import com.olefaent.waterbilling.data.DefaultAppContainer
 
@@ -10,6 +11,6 @@ lateinit var container: AppContainer
     override fun onCreate() {
         super.onCreate()
 
-        container = DefaultAppContainer()
+        container = DefaultAppContainer(this)
     }
 }

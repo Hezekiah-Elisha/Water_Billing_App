@@ -22,6 +22,6 @@ interface BillingApiService {
     @GET("/customers/{customerId}")
     suspend fun getCustomer(@Path("customerId") customerId: Int): Customer
 
-    @POST("/auth/login")
+    @POST("auth/login")
     suspend fun login(@Body loginRequest: LoginRequest): LoginResponse
 }
