@@ -1,19 +1,29 @@
 package com.olefaent.waterbilling.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -31,26 +41,18 @@ fun HomeScreen(modifier: Modifier = Modifier){
     Column(
         modifier = modifier
     ) {
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            ),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 6.dp
-            ),
-            modifier = Modifier
-                .padding(15.dp)
-                .fillMaxWidth(),
-        ){
-            Row{
-                CircularImage()
-                Text(
-                    text = "Welcome ${user?.username}!",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(15.dp)
-                )
-            }
+        IntroPart(name = user?.username ?: "None")
+        Row{
+//            CircularImage()
+            Text(
+                text = "Hello ${user?.username}!",
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(15.dp)
+            )
+            Text(
+                text = "Welcome back!",
+            )
         }
     }
 }
@@ -62,11 +64,46 @@ fun CircularImage(modifier: Modifier = Modifier){
         painter = image,
         contentDescription = "Profile Picture",
         modifier = modifier
-            .padding(15.dp)
-            .size(100.dp)
+            .size(80.dp)
             .clip(CircleShape),
         contentScale = ContentScale.Crop
     )
+}
+
+@Composable
+fun IntroPart( name : String, modifier: Modifier = Modifier){
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(200.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.End
+    ){
+        Box(
+            modifier = Modifier.width(300.dp),
+            contentAlignment = Alignment.TopEnd
+        ) {
+            Card(
+                shape = CircleShape,
+                modifier = modifier
+                    .wrapContentWidth()
+                    .padding(16.dp),
+                border = BorderStroke(0.6.dp, Color.Black),
+            ) {
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(text = name, modifier = Modifier.padding(8.dp),
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center
+                    )
+                    CircularImage()
+                }
+            }
+        }
+    }
 }
 
 
@@ -74,5 +111,5 @@ fun CircularImage(modifier: Modifier = Modifier){
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview(){
-    HomeScreen()
+    IntroPart("Hezekiah")
 }

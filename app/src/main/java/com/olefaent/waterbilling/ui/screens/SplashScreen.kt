@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -22,7 +23,10 @@ fun SplashScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ){
-    val loggedIn = false
+    val userViewModel: UserViewModel = viewModel(
+        factory = UserViewModel.Factory
+    )
+    val loggedIn = userViewModel.isLoggedIn()
 
     Column (
         modifier = modifier.fillMaxSize(),
@@ -42,7 +46,11 @@ fun SplashScreen(
             delay(2000)
 
             if (loggedIn){
-                Toast.makeText( null, "Welcome Worker!", Toast.LENGTH_SHORT).show()
+                navController.navigate("custom"){
+                    popUpTo("splash"){
+                        inclusive = true
+                    }
+                }
             } else {
                 navController.navigate("login"){
                     popUpTo("splash"){
