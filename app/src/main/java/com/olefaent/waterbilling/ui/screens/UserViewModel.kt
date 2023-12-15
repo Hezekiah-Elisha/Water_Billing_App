@@ -107,6 +107,10 @@ class UserViewModel(private val repository: UserRepository, private val context:
     }
 
     fun logout() {
+        viewModelScope.launch {
+            val token = getAccessToken()
+            repository.logout(token.toString())
+        }
         clearAccessToken()
     }
 

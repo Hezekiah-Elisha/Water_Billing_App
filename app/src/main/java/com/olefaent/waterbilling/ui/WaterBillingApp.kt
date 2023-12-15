@@ -102,7 +102,7 @@ fun NavigationGraph(
              * - navController = [navController]
              *
              */
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
         composable(BottomNav.Customers.route){
             CustomersScreen(navController =navController , uiState = billingViewModel.uiState)

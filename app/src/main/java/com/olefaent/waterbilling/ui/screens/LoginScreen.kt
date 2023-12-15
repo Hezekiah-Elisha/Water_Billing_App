@@ -113,11 +113,6 @@ fun LoginScreen(navController : NavController, modifier: Modifier = Modifier){
 
                     Log.d("LOGIN", "LoginScreen: Access Token: ${mState.loginResponse.accessToken}")
                     Log.d("LOGIN", "LoginScreen: nAccess Token: $token\n User: $user")
-                    navController.navigate("custom"){
-                        popUpTo("login"){
-                            inclusive = true
-                        }
-                    }
 
                 } else if (mState is UserState.Error){
                     Log.d("LOGIN", "LoginScreen: ${mState.message}")

@@ -1,5 +1,6 @@
 package com.olefaent.waterbilling.ui.screens
 
+import android.app.Activity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -15,8 +16,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,15 +30,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.olefaent.waterbilling.R
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier){
+fun HomeScreen(navController: NavController , modifier: Modifier = Modifier){
+    val context = LocalContext.current as Activity
     val userViewModel: UserViewModel = viewModel(
         factory = UserViewModel.Factory
     )
@@ -53,6 +61,19 @@ fun HomeScreen(modifier: Modifier = Modifier){
             Text(
                 text = "Welcome back!",
             )
+        }
+        Button(
+            onClick = {
+                userViewModel.logout()
+                navController.navigate("login"){
+                    popUpTo("splash"){
+                        inclusive = true
+                    }
+                }
+            },
+            modifier = modifier.padding(20.dp)){
+            Icon(imageVector = Icons.Filled.ExitToApp, contentDescription = "Logout Icon")
+            Text(text = "Logout")
         }
     }
 }
@@ -103,6 +124,7 @@ fun IntroPart( name : String, modifier: Modifier = Modifier){
                 }
             }
         }
+
     }
 }
 

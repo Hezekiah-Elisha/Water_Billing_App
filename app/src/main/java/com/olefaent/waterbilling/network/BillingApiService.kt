@@ -8,6 +8,7 @@ import com.olefaent.waterbilling.model.Meter
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -28,5 +29,5 @@ interface BillingApiService {
     suspend fun login(@Body loginRequest: LoginRequest): LoginResponse
 
     @DELETE("auth/logout")
-    suspend fun logout(): LogoutResponse
+    suspend fun logout(@Header("Authorization") token: String): LogoutResponse
 }
