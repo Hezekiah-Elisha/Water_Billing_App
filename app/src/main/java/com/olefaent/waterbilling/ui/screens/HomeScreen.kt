@@ -62,6 +62,12 @@ fun HomeScreen(navController: NavController , modifier: Modifier = Modifier){
                 text = "Welcome back!",
             )
         }
+        Card {
+            Text(
+                text = "This is a card",
+                modifier = Modifier.padding(15.dp)
+            )
+        }
         Button(
             onClick = {
                 userViewModel.logout()
