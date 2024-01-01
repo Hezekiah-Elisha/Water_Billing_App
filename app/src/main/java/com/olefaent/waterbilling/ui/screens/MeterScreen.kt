@@ -86,7 +86,11 @@ fun OneMeterScreen(
         topBar = {
             MTopBar(
                 goBack = {
-                    navController?.popBackStack()
+                    navController?.navigate("meters"){
+                        popUpTo("meters"){
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
