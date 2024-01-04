@@ -130,7 +130,7 @@ fun LoginScreen(navController : NavController, modifier: Modifier = Modifier){
                     Log.d("LOGIN", "LoginScreen: nAccess Token: $token\n User: $user")
 
                     if (user != null){
-                        navController.navigate("home")
+                        navController.navigate("custom")
                     }else{
                         Log.d("LOGIN", "LoginScreen: User is null")
                     }
