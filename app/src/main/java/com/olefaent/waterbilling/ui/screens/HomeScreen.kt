@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.olefaent.waterbilling.R
+import com.olefaent.waterbilling.ui.theme.poppins
 
 @Composable
 fun HomeScreen(navController: NavController , modifier: Modifier = Modifier){
@@ -49,38 +50,62 @@ fun HomeScreen(navController: NavController , modifier: Modifier = Modifier){
     Column(
         modifier = modifier
     ) {
-        IntroPart(name = user?.username ?: "None")
-        Row{
-//            CircularImage()
+
+        Row(
+            modifier = modifier.padding(15.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ){
+            CircularImage()
             Text(
                 text = "Hello ${user?.username}!",
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(15.dp)
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(15.dp),
+                fontFamily = poppins
             )
-            Text(
-                text = "Welcome back!",
-            )
+            Button(
+                onClick = { /*TODO*/ }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ExitToApp,
+                    contentDescription = "Exit Icon",
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
-        Card {
-            Text(
-                text = "This is a card",
-                modifier = Modifier.padding(15.dp)
-            )
-        }
-        Button(
-            onClick = {
-                userViewModel.logout()
-                navController.navigate("login"){
-                    popUpTo("splash"){
-                        inclusive = true
-                    }
-                }
-            },
-            modifier = modifier.padding(20.dp)){
-            Icon(imageVector = Icons.Filled.ExitToApp, contentDescription = "Logout Icon")
-            Text(text = "Logout")
-        }
+
+//        IntroPart(name = user?.username ?: "None")
+//        Row{
+////            CircularImage()
+//            Text(
+//                text = "Hello ${user?.username}!",
+//                textAlign = TextAlign.Center,
+//                style = MaterialTheme.typography.headlineMedium,
+//                modifier = Modifier.padding(15.dp)
+//            )
+//            Text(
+//                text = "Welcome back!",
+//            )
+//        }
+//        Card {
+//            Text(
+//                text = "This is a card",
+//                modifier = Modifier.padding(15.dp)
+//            )
+//        }
+//        Button(
+//            onClick = {
+//                userViewModel.logout()
+//                navController.navigate("login"){
+//                    popUpTo("splash"){
+//                        inclusive = true
+//                    }
+//                }
+//            },
+//            modifier = modifier.padding(20.dp)){
+//            Icon(imageVector = Icons.Filled.ExitToApp, contentDescription = "Logout Icon")
+//            Text(text = "Logout")
+//        }
     }
 }
 
@@ -91,9 +116,10 @@ fun CircularImage(modifier: Modifier = Modifier){
         painter = image,
         contentDescription = "Profile Picture",
         modifier = modifier
-            .size(80.dp)
+            .size(40.dp)
             .clip(CircleShape),
-        contentScale = ContentScale.Crop
+        contentScale = ContentScale.Crop,
+        alignment = Alignment.Center,
     )
 }
 
