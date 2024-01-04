@@ -53,23 +53,49 @@ fun HomeScreen(navController: NavController , modifier: Modifier = Modifier){
 
         Row(
             modifier = modifier.padding(15.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
         ){
             CircularImage()
-            Text(
-                text = "Hello ${user?.username}!",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(15.dp),
-                fontFamily = poppins
-            )
+
+            Column {
+                Text(
+                    text = "Hello ${user?.username}!",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(5.dp),
+                    fontFamily = poppins
+                )
+                Text(
+                    text = "Welcome back!",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(2.dp),
+                    fontFamily = poppins
+                )
+            }
+
             Button(
-                onClick = { /*TODO*/ }
+                onClick = {
+                    userViewModel.logout()
+                    navController.navigate("login"){
+                        popUpTo("splash"){
+                            inclusive = true
+                        }
+                    }
+
+                    context.finish()
+                }
             ) {
                 Icon(
                     imageVector = Icons.Filled.ExitToApp,
                     contentDescription = "Exit Icon",
                     modifier = Modifier.size(20.dp)
+                )
+                Text(
+                    text = "Logout",
+                    modifier = Modifier.padding(5.dp),
+                    fontFamily = poppins
                 )
             }
         }
