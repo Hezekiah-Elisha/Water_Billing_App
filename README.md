@@ -1,5 +1,3 @@
-create a readme file for the project
-```
 # Project Name
 Water Billing App
 
