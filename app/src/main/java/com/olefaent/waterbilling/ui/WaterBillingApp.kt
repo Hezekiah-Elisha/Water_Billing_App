@@ -42,30 +42,8 @@ import kotlinx.coroutines.withContext
 fun WaterBillingApp(){
     val navController = rememberNavController()
     val billingViewModel: BillingViewModel = viewModel(factory = BillingViewModel.Factory)
-//    if (loggedIn){
-//        navController.navigate("splash"){
-//            popUpTo("splash"){
-//                inclusive = true
-//            }
-//        }
-//    }
 
-//    Scaffold (
-//        modifier = Modifier.fillMaxSize(),
-//        bottomBar = {
-//            BottomNavigation(navController)
-//        }
-//    ){ innerpadding->
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(innerpadding)
-//        ) {
-//            NavigationGraph(navController = navController, billingViewModel = billingViewModel)
-//        }
-//    }
     NavigationGraph(navController = navController, billingViewModel = billingViewModel)
-
 
 }
 
@@ -102,7 +80,7 @@ fun NavigationGraph(
              * - navController = [navController]
              *
              */
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController, viewModel = billingViewModel)
         }
         composable(BottomNav.Customers.route){
             CustomersScreen(navController =navController , uiState = billingViewModel.uiState)

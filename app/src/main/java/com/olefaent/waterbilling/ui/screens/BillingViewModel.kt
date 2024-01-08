@@ -1,5 +1,6 @@
 package com.olefaent.waterbilling.ui.screens
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -55,7 +56,7 @@ class BillingViewModel(private val billingRepository: WaterBillingRepository) : 
         }
     }
 
-    private fun getMeters(){
+    fun getMeters(){
         viewModelScope.launch {
             meterState = try {
                 MeterState.Success(billingRepository.getMeters())
@@ -64,6 +65,7 @@ class BillingViewModel(private val billingRepository: WaterBillingRepository) : 
             } catch (e: HttpException){
                 MeterState.Error(e.message ?: "Unknown error")
             }
+            Log.d("Meters State", "getMeters: $meterState")
         }
     }
 

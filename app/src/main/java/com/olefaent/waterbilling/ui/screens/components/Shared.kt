@@ -29,7 +29,9 @@ fun ErrorScreen(retryAction: () -> Unit , modifier: Modifier = Modifier) {
             contentDescription = ""
         )
         Text(text = "Check Internet Connection")
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = {
+             retryAction()
+        }) {
             Text(text = "Retry")
         }
     }
@@ -63,6 +65,6 @@ fun LoadingScreen(
 @Preview(showBackground = true)
 @Composable
 fun LoadingScreenPreview(){
-    LoadingScreen()
+    ErrorScreen({})
 //    ErrorScreen(retryAction = { /*TODO*/ })
 }

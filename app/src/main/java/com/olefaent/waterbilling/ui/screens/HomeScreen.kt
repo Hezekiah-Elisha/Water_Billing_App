@@ -51,10 +51,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.olefaent.waterbilling.R
 import com.olefaent.waterbilling.model.Meter
+import com.olefaent.waterbilling.ui.screens.components.ErrorScreen
+import com.olefaent.waterbilling.ui.screens.components.LoadingScreen
 import com.olefaent.waterbilling.ui.theme.poppins
 
 @Composable
-fun HomeScreen(navController: NavController , modifier: Modifier = Modifier){
+fun HomeScreen(
+    navController: NavController,
+    viewModel: BillingViewModel,
+    modifier: Modifier = Modifier
+){
+//    getting meter state
+    val state = viewModel.meterState
+
     val context = LocalContext.current as Activity
     val userViewModel: UserViewModel = viewModel(
         factory = UserViewModel.Factory
@@ -120,142 +129,16 @@ fun HomeScreen(navController: NavController , modifier: Modifier = Modifier){
             style = MaterialTheme.typography.headlineMedium,
             fontFamily = poppins
         )
-        val meters = listOf(
-            Meter(
-                id = 1,
-                meterNumber = "NWC1",
-                meterType = "domestic",
-                customerId = 1,
-                installationDate = "2021-01-01",
-                gpsCoordinates = "123.123, 123.123",
-                createdAt = "2021-01-01"
-            ),
-            Meter(
-                id = 2,
-                meterNumber = "NWC2",
-                meterType = "domestic",
-                customerId = 1,
-                installationDate = "2021-01-01",
-                gpsCoordinates = "123.123, 123.123",
-                createdAt = "2021-01-01"
-            ),
-            Meter(
-                id = 3,
-                meterNumber = "NWC3",
-                meterType = "domestic",
-                customerId = 1,
-                installationDate = "2021-01-01",
-                gpsCoordinates = "123.123, 123.123",
-                createdAt = "2021-01-01"
-            ),
-            Meter(
-                id = 4,
-                meterNumber = "NWC4",
-                meterType = "domestic",
-                customerId = 1,
-                installationDate = "2021-01-01",
-                gpsCoordinates = "123.123, 123.123",
-                createdAt = "2021-01-01"
-            ),
-            Meter(
-                id = 5,
-                meterNumber = "NWC5",
-                meterType = "domestic",
-                customerId = 1,
-                installationDate = "2021-01-01",
-                gpsCoordinates = "123.123, 123.123",
-                createdAt = "2021-01-01"
-            ),
-            Meter(
-                id = 6,
-                meterNumber = "NWC6",
-                meterType = "domestic",
-                customerId = 1,
-                installationDate = "2021-01-01",
-                gpsCoordinates = "123.123, 123.123",
-                createdAt = "2021-01-01"
-            ),
-            Meter(
-                id = 7,
-                meterNumber = "NWC7",
-                meterType = "domestic",
-                customerId = 1,
-                installationDate = "2021-01-01",
-                gpsCoordinates = "123.123, 123.123",
-                createdAt = "2021-01-01"
-            ),
-            Meter(
-                id = 8,
-                meterNumber = "NWC8",
-                meterType = "domestic",
-                customerId = 1,
-                installationDate = "2021-01-01",
-                gpsCoordinates = "123.123, 123.123",
-                createdAt = "2021-01-01"
-            ),
-            Meter(
-                id = 9,
-                meterNumber = "NWC9",
-                meterType = "domestic",
-                customerId = 1,
-                installationDate = "2021-01-01",
-                gpsCoordinates = "123.123, 123.123",
-                createdAt = "2021-02-01"
-            ),
-            Meter(
-                id = 10,
-                meterNumber = "NWC10",
-                meterType = "domestic",
-                customerId = 1,
-                installationDate = "2021-02-01",
-                gpsCoordinates = "123.123, 123.123",
-                createdAt = "2021-02-01"
-            ),
-            Meter(
-                id = 11,
-                meterNumber = "NWC11",
-                meterType = "domestic",
-                customerId = 1,
-                installationDate = "2021-02-01",
-                gpsCoordinates = "123.123, 123.123",
-                createdAt = "2021-02-01"
-            ),
-        )
-        MetersList(meters = meters)
-
-
-//        IntroPart(name = user?.username ?: "None")
-//        Row{
-////            CircularImage()
-//            Text(
-//                text = "Hello ${user?.username}!",
-//                textAlign = TextAlign.Center,
-//                style = MaterialTheme.typography.headlineMedium,
-//                modifier = Modifier.padding(15.dp)
-//            )
-//            Text(
-//                text = "Welcome back!",
-//            )
-//        }
-//        Card {
-//            Text(
-//                text = "This is a card",
-//                modifier = Modifier.padding(15.dp)
-//            )
-//        }
-//        Button(
-//            onClick = {
-//                userViewModel.logout()
-//                navController.navigate("login"){
-//                    popUpTo("splash"){
-//                        inclusive = true
-//                    }
-//                }
-//            },
-//            modifier = modifier.padding(20.dp)){
-//            Icon(imageVector = Icons.Filled.ExitToApp, contentDescription = "Logout Icon")
-//            Text(text = "Logout")
-//        }
+        when (state){
+            is MeterState.Loading -> LoadingScreen()
+            is MeterState.Success -> MyMetersList(navController = navController, meters = state.meters)
+            else -> {
+                ErrorScreen(retryAction = {
+                    viewModel.getMeters()
+                })
+            }
+        }
+//        MetersList(meters = meters)
     }
 }
 
@@ -284,7 +167,7 @@ fun SearchBar(modifier: Modifier = Modifier){
 }
 
 @Composable
-fun MetersList(meters: List<Meter>, modifier: Modifier = Modifier){
+fun MyMetersList(navController: NavController, meters: List<Meter>, modifier: Modifier = Modifier){
     LazyColumn(modifier = modifier){
         items(meters.size){ index ->
 //            MetersItem(navController=navController, meter = meters[index])
@@ -302,20 +185,31 @@ fun MeterRow(meter: Meter, modifier: Modifier = Modifier){
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = meter.meterNumber,
-            modifier = Modifier.padding(8.dp),
-            style = MaterialTheme.typography.headlineSmall,
-            fontFamily = poppins,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = meter.meterType,
-            modifier = Modifier.padding(8.dp),
-            style = MaterialTheme.typography.bodySmall,
-            fontFamily = poppins,
-            textAlign = TextAlign.Center
-        )
+        Column {
+            Text(
+                text = meter.meterNumber,
+                modifier = Modifier.padding(4.dp),
+                style = MaterialTheme.typography.headlineSmall,
+                fontFamily = poppins,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = meter.meterType,
+                modifier = Modifier.padding(2.dp),
+                style = MaterialTheme.typography.bodySmall,
+                fontFamily = poppins,
+                textAlign = TextAlign.Center
+            )
+        }
+        Button(onClick = { /*TODO*/ }) {
+            Text(
+                text = "See info",
+                modifier = Modifier.padding(8.dp),
+                style = MaterialTheme.typography.bodySmall,
+                fontFamily = poppins,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
@@ -376,106 +270,4 @@ fun IntroPart( name : String, modifier: Modifier = Modifier){
 @Composable
 fun HomeScreenPreview(){
 //    MetersList()
-    val meters = listOf(
-        Meter(
-            id = 1,
-            meterNumber = "NWC1",
-            meterType = "domestic",
-            customerId = 1,
-            installationDate = "2021-01-01",
-            gpsCoordinates = "123.123, 123.123",
-            createdAt = "2021-01-01"
-        ),
-        Meter(
-            id = 2,
-            meterNumber = "NWC2",
-            meterType = "domestic",
-            customerId = 1,
-            installationDate = "2021-01-01",
-            gpsCoordinates = "123.123, 123.123",
-            createdAt = "2021-01-01"
-        ),
-        Meter(
-            id = 3,
-            meterNumber = "NWC3",
-            meterType = "domestic",
-            customerId = 1,
-            installationDate = "2021-01-01",
-            gpsCoordinates = "123.123, 123.123",
-            createdAt = "2021-01-01"
-        ),
-        Meter(
-            id = 4,
-            meterNumber = "NWC4",
-            meterType = "domestic",
-            customerId = 1,
-            installationDate = "2021-01-01",
-            gpsCoordinates = "123.123, 123.123",
-            createdAt = "2021-01-01"
-        ),
-        Meter(
-            id = 5,
-            meterNumber = "NWC5",
-            meterType = "domestic",
-            customerId = 1,
-            installationDate = "2021-01-01",
-            gpsCoordinates = "123.123, 123.123",
-            createdAt = "2021-01-01"
-        ),
-        Meter(
-            id = 6,
-            meterNumber = "NWC6",
-            meterType = "domestic",
-            customerId = 1,
-            installationDate = "2021-01-01",
-            gpsCoordinates = "123.123, 123.123",
-            createdAt = "2021-01-01"
-        ),
-        Meter(
-            id = 7,
-            meterNumber = "NWC7",
-            meterType = "domestic",
-            customerId = 1,
-            installationDate = "2021-01-01",
-            gpsCoordinates = "123.123, 123.123",
-            createdAt = "2021-01-01"
-        ),
-        Meter(
-            id = 8,
-            meterNumber = "NWC8",
-            meterType = "domestic",
-            customerId = 1,
-            installationDate = "2021-01-01",
-            gpsCoordinates = "123.123, 123.123",
-            createdAt = "2021-01-01"
-        ),
-        Meter(
-            id = 9,
-            meterNumber = "NWC9",
-            meterType = "domestic",
-            customerId = 1,
-            installationDate = "2021-01-01",
-            gpsCoordinates = "123.123, 123.123",
-            createdAt = "2021-02-01"
-        ),
-        Meter(
-            id = 10,
-            meterNumber = "NWC10",
-            meterType = "domestic",
-            customerId = 1,
-            installationDate = "2021-02-01",
-            gpsCoordinates = "123.123, 123.123",
-            createdAt = "2021-02-01"
-        ),
-        Meter(
-            id = 11,
-            meterNumber = "NWC11",
-            meterType = "domestic",
-            customerId = 1,
-            installationDate = "2021-02-01",
-            gpsCoordinates = "123.123, 123.123",
-            createdAt = "2021-02-01"
-        ),
-    )
-    MetersList(meters)
 }
