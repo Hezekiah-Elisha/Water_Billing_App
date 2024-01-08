@@ -26,7 +26,7 @@ This is an android application that allows workers to take meter readings and ge
 + Log in with a given email and password .
 
 ## Credits
-+ [Hezekiah Elisha](x.com/_hezekiahelisha)
++ [Hezekiah Elisha](https://x.com/_hezekiahelisha)
 + [Moi University](https://www.mu.ac.ke/)
 + [ALX Africa](https://www.alxafrica.com/)
 
