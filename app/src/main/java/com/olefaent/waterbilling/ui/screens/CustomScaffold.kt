@@ -7,9 +7,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.olefaent.waterbilling.ui.BottomNavigation
 import com.olefaent.waterbilling.ui.NavigationGraph
@@ -20,6 +18,7 @@ import com.olefaent.waterbilling.ui.utils.BottomNav
 fun CustomScaffold(){
     val navController = rememberNavController()
     val billingViewModel: BillingViewModel = viewModel(factory = BillingViewModel.Factory)
+    val meterViewModel : MeterViewModel = viewModel(factory = MeterViewModel.Factory)
     Scaffold (
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -31,18 +30,7 @@ fun CustomScaffold(){
                 .fillMaxSize()
                 .padding(innerpadding)
         ) {
-            NavigationGraph(root = BottomNav.Home.route,navController = navController, billingViewModel = billingViewModel)
+            NavigationGraph(root = BottomNav.Home.route,navController = navController, billingViewModel = billingViewModel, meterViewModel = meterViewModel)
         }
     }
-}
-
-/**
- * Preview
- *
- * @author: Hezekiah Elisha
- */
-@Preview(showBackground = true)
-@Composable
-fun CustomScaffoldPreview(){
-    CustomScaffold()
 }

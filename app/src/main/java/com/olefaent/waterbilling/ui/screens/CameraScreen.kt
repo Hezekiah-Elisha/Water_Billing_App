@@ -19,15 +19,19 @@ import com.google.accompanist.permissions.rememberPermissionState
 @Composable
 fun CameraScreen(
     meterId: Int,
-    navController: NavController
+    navController: NavController,
+    meterViewModel: MeterViewModel
 ){
     val cameraPermissionState: PermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
 
     MainContent(
         navController = navController,
         meterId = meterId,
-        hasPermission = cameraPermissionState.status.isGranted ,
-        onPermissionRequest = { cameraPermissionState.launchPermissionRequest() }
+        hasPermission = cameraPermissionState.status.isGranted,
+        meterViewModel = meterViewModel,
+        onPermissionRequest = {
+            cameraPermissionState.launchPermissionRequest()
+        }
     )
 }
 
@@ -36,12 +40,14 @@ fun MainContent(
     navController: NavController,
     meterId: Int,
     hasPermission: Boolean,
+    meterViewModel: MeterViewModel,
     onPermissionRequest: () -> Unit
 ){
     if (hasPermission){
         CameraContent(
             meterId = meterId,
-            navController = navController
+            navController = navController,
+            meterViewModel = meterViewModel
         )
     } else {
         PermissionRequest(onPermissionRequest)

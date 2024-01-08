@@ -30,6 +30,7 @@ import com.olefaent.waterbilling.ui.screens.components.LoadingScreen
 fun MetersScreen(
     meterState: MeterState,
     navController: NavController,
+    meterViewModel: MeterViewModel,
     modifier: Modifier = Modifier,
 ){
     when (meterState){

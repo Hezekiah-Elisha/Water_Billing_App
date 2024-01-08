@@ -29,6 +29,7 @@ import com.olefaent.waterbilling.ui.screens.CustomersScreen
 import com.olefaent.waterbilling.ui.screens.HomeScreen
 import com.olefaent.waterbilling.ui.screens.LoginScreen
 import com.olefaent.waterbilling.ui.screens.MeterScreen
+import com.olefaent.waterbilling.ui.screens.MeterViewModel
 import com.olefaent.waterbilling.ui.screens.MetersScreen
 import com.olefaent.waterbilling.ui.screens.SplashScreen
 import com.olefaent.waterbilling.ui.utils.BottomNav
@@ -42,8 +43,10 @@ import kotlinx.coroutines.withContext
 fun WaterBillingApp(){
     val navController = rememberNavController()
     val billingViewModel: BillingViewModel = viewModel(factory = BillingViewModel.Factory)
+    val meterViewModel : MeterViewModel = viewModel(factory = MeterViewModel.Factory)
 
-    NavigationGraph(navController = navController, billingViewModel = billingViewModel)
+
+    NavigationGraph(navController = navController, billingViewModel = billingViewModel, meterViewModel = meterViewModel)
 
 }
 
@@ -64,6 +67,7 @@ fun NavigationGraph(
     root : String = "splash",
     navController: NavHostController,
     billingViewModel: BillingViewModel,
+    meterViewModel: MeterViewModel,
 ){
 
     NavHost(navController = navController, startDestination = root ){
@@ -86,7 +90,7 @@ fun NavigationGraph(
             CustomersScreen(navController =navController , uiState = billingViewModel.uiState)
         }
         composable(BottomNav.Meters.route){
-            MetersScreen(navController = navController, meterState = billingViewModel.meterState)
+            MetersScreen(navController = navController, meterState = billingViewModel.meterState, meterViewModel = meterViewModel)
         }
         composable(
             "meter/{meterId}",
@@ -98,7 +102,8 @@ fun NavigationGraph(
             ){
             MeterScreen(
                 meterId = it.arguments?.getInt("meterId") ?: 0,
-                navController = navController
+                navController = navController,
+                meterViewModel = meterViewModel
             )
         }
         composable("camera/{meterId}",
@@ -109,7 +114,8 @@ fun NavigationGraph(
         ){
             CameraScreen(
                 meterId = it.arguments?.getInt("meterId") ?: 0,
-                navController = navController
+                navController = navController,
+                meterViewModel = meterViewModel
             )
         }
         composable("splash"){

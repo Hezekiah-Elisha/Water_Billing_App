@@ -1,6 +1,10 @@
 package com.olefaent.waterbilling.ui.screens
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,30 +39,39 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.olefaent.waterbilling.R
 import com.olefaent.waterbilling.model.Meter
 import com.olefaent.waterbilling.ui.screens.components.ErrorScreen
 import com.olefaent.waterbilling.ui.screens.components.LoadingScreen
 import kotlinx.coroutines.delay
+import java.io.File
 
 
 @Composable
 fun MeterScreen(
     meterId: Int,
     navController: NavController? = null,
+    meterViewModel: MeterViewModel
 ) {
-    val meterViewModel : MeterViewModel = viewModel(factory = MeterViewModel.Factory)
+//    val meterViewModel : MeterViewModel = viewModel(factory = MeterViewModel.Factory)
     val uiState = meterViewModel.uiState
     val photoFile = meterViewModel.photo_url.value
-//    val mUri = Uri.fromFile(photoFile)
-    Log.d("MeterScreen photo", "MeterScreen: $photoFile")
+    val mUri = Uri.fromFile(File(photoFile))
+
+    Log.d("MeterScreen photo", "MeterScreen: $mUri")
+
 
     val valueMeter = meterViewModel.setMeterId(meterId)
     Log.d("Meter", "MeterScreen: $valueMeter")
@@ -68,7 +81,7 @@ fun MeterScreen(
 
     when (uiState){
         is OneMeterState.Loading -> LoadingScreen()
-        is OneMeterState.Success -> OneMeterScreen(meter = uiState.meter, navController = navController, photoFile = photoFile)
+        is OneMeterState.Success -> OneMeterScreen(meter = uiState.meter, navController = navController, photoFile = mUri)
         is OneMeterState.Error -> ErrorScreen(retryAction = {})
     }
 }
@@ -77,10 +90,16 @@ fun MeterScreen(
 @Composable
 fun OneMeterScreen(
     meter: Meter,
-    modifier: Modifier = Modifier ,
-    photoFile: String = "",
+    modifier: Modifier = Modifier,
+    photoFile: Uri,
     navController: NavController? = null,
 ){
+    val imageBitmap = remember { mutableStateOf<Bitmap?>(null) }
+    val context = LocalContext.current
+
+//    val bitmap = BitmapFactory.decodeStream(context.contentResolver.openInputStream(photoFile))
+//    imageBitmap.value = bitmap
+
     Scaffold(
         modifier = modifier.background(MaterialTheme.colorScheme.background),
         topBar = {
@@ -105,10 +124,20 @@ fun OneMeterScreen(
                     .padding(12.dp)
                 
             ){
+                Log.d("PhotoFile", "OneMeterScreen: $photoFile")
+                val imageUri = "/storage/emulated/0/Android/data/com.olefaent.waterbilling/files/content:/media/external/images/media/1704726242624.jpg"
                 AsyncImage(
-                    modifier = modifier.fillMaxSize(),
-                    model = "https://c8.alamy.com/comp/CNPAG5/close-up-image-of-a-newly-installed-brass-water-meter-in-a-suburban-CNPAG5.jpg",
-                    contentDescription = "Water Meter Image"
+//                    model = ImageRequest.Builder(LocalContext.current)
+//                        .data(photoFile)
+//                        .crossfade(true)
+//                        .build(),
+                    model = photoFile,
+                    contentDescription = stringResource(R.string.meter_image_description),
+                    contentScale = ContentScale.Crop,
+                    modifier = modifier.fillMaxWidth()
+                        .height(200.dp),
+                    error = painterResource(id = R.drawable.ic_broken_image),
+                    placeholder = painterResource(id = R.drawable.loading_img),
                 )
             }
             Column(
@@ -319,22 +348,22 @@ fun MTopBar(
 //}
 
 
-@Preview(showBackground = true)
-@Composable
-fun OneMeterScreenPreview() {
-    val meter = Meter(
-        meterNumber = "123456789",
-        gpsCoordinates = "123456789",
-        installationDate = "123456789",
-        meterType = "123456789",
-        id = 1,
-        createdAt = "123456789",
-        customerId = 1,
-    )
-
-    OneMeterScreen(meter = meter)
-
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun OneMeterScreenPreview() {
+//    val meter = Meter(
+//        meterNumber = "123456789",
+//        gpsCoordinates = "123456789",
+//        installationDate = "123456789",
+//        meterType = "123456789",
+//        id = 1,
+//        createdAt = "123456789",
+//        customerId = 1,
+//    )
+//
+//    OneMeterScreen(meter = meter)
+//
+//}
 
 @Preview(showBackground = true)
 @Composable

@@ -44,9 +44,10 @@ import java.util.Locale
 @Composable
 fun CameraContent(
     meterId: Int,
-    navController: NavController
+    navController: NavController,
+    meterViewModel: MeterViewModel
 ){
-    val meterViewModel : MeterViewModel = viewModel(factory = MeterViewModel.Factory)
+//    val meterViewModel : MeterViewModel = viewModel(factory = MeterViewModel.Factory)
 
     val context = LocalContext.current
     val lifeCycleOwner = LocalLifecycleOwner.current
