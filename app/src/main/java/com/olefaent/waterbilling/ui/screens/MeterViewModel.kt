@@ -1,10 +1,12 @@
 package com.olefaent.waterbilling.ui.screens
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -27,6 +29,7 @@ class MeterViewModel(private val repository: WaterBillingRepository): ViewModel(
     private val _photo_url = mutableStateOf("")
     val photo_url: State<String> = _photo_url
 
+    var bitmap: ImageBitmap? by mutableStateOf(null)
 
     init {
         getMeter(meter_id.value)
@@ -37,7 +40,20 @@ class MeterViewModel(private val repository: WaterBillingRepository): ViewModel(
     }
     fun setPhotoUrl(photoUrl: String){
         _photo_url.value = photoUrl
+
     }
+
+//    fun meterBitmap(): Bitmap? {
+//        val photoUrl = photo_url.value
+//        if (photoUrl == "") {
+//            return null
+//        }
+//        val file = File(photoUrl)
+//        if (!file.exists()) {
+//            return null
+//        }
+//        return BitmapFactory.decodeFile(file.absolutePath)
+//    }
 
 
     fun getMeter(meterId: Int){
@@ -53,6 +69,8 @@ class MeterViewModel(private val repository: WaterBillingRepository): ViewModel(
 
         }
     }
+
+
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

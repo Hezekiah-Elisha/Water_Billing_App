@@ -39,6 +39,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -58,6 +61,8 @@ import com.olefaent.waterbilling.ui.screens.components.ErrorScreen
 import com.olefaent.waterbilling.ui.screens.components.LoadingScreen
 import kotlinx.coroutines.delay
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 
 
 @Composable
@@ -85,7 +90,7 @@ fun MeterScreen(
 
     when (uiState){
         is OneMeterState.Loading -> LoadingScreen()
-        is OneMeterState.Success -> OneMeterScreen(meter = uiState.meter, navController = navController, photoFile = mUri)
+        is OneMeterState.Success -> OneMeterScreen(meter = uiState.meter, navController = navController, photoFile = mUri, meterViewModel = meterViewModel)
         is OneMeterState.Error -> ErrorScreen(retryAction = {})
     }
 }
@@ -96,6 +101,7 @@ fun OneMeterScreen(
     meter: Meter,
     modifier: Modifier = Modifier,
     photoFile: Uri,
+    meterViewModel: MeterViewModel,
     navController: NavController? = null,
 ){
     val imageBitmap = remember { mutableStateOf<Bitmap?>(null) }
@@ -129,20 +135,30 @@ fun OneMeterScreen(
                 
             ){
                 Log.d("PhotoFile", "OneMeterScreen: $photoFile")
-                val imageUri = "/storage/emulated/0/Android/data/com.olefaent.waterbilling/files/content:/media/external/images/media/1704726242624.jpg"
-                AsyncImage(
-//                    model = ImageRequest.Builder(LocalContext.current)
-//                        .data(photoFile)
-//                        .crossfade(true)
-//                        .build(),
-                    model = photoFile,
-                    contentDescription = stringResource(R.string.meter_image_description),
-                    contentScale = ContentScale.Crop,
-                    modifier = modifier.fillMaxWidth()
-                        .height(200.dp),
-                    error = painterResource(id = R.drawable.ic_broken_image),
-                    placeholder = painterResource(id = R.drawable.loading_img),
-                )
+//                AsyncImage(
+////                    model = ImageRequest.Builder(LocalContext.current)
+////                        .data(photoFile)
+////                        .crossfade(true)
+////                        .build(),
+//                    model = photoFile,
+//                    contentDescription = stringResource(R.string.meter_image_description),
+//                    contentScale = ContentScale.Crop,
+//                    modifier = modifier.fillMaxWidth()
+//                        .height(200.dp),
+//                    error = painterResource(id = R.drawable.ic_broken_image),
+//                    placeholder = painterResource(id = R.drawable.loading_img),
+//                )
+
+                meterViewModel.bitmap?.let {
+                    Image(
+                        bitmap = it,
+                        contentDescription = "Image to display here",
+                        modifier = modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+
 //                Image(
 //                    painter = rememberAsyncImagePainter(photoFile),
 //                    contentDescription = "Image to display here",
@@ -322,6 +338,27 @@ fun MTopBar(
             fontSize = 20.sp
         )
     }
+}
+
+@Composable
+fun loadBitmapFromUri(uri: Uri): Bitmap {
+    val context = LocalContext.current
+    var bitmap: Bitmap = null!!
+    try {
+        val bitmap = BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri))
+        return bitmap
+    } catch (e: FileNotFoundException) {
+        Log.e("Loadbitmap", "loadBitmapFromUri: $e", )
+        e.printStackTrace()
+    } catch (e: IOException) {
+        Log.e("Loadbitmap", "loadBitmapFromUri: $e", )
+
+        e.printStackTrace()
+    }
+//    val bitmap = remember(uri) {
+//        BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri))
+//    }
+    return bitmap
 }
 
 

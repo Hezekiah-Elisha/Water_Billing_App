@@ -40,6 +40,24 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+@Composable
+fun CameraPreview(
+    controller: LifecycleCameraController,
+    modifier : Modifier = Modifier
+) {
+    val lifeCycleOwner = LocalLifecycleOwner.current
+    AndroidView(
+        factory = {
+            PreviewView(it).apply{
+                this.controller = controller
+                controller.bindToLifecycle(lifeCycleOwner)
+            }
+        },
+        modifier = modifier
+    )
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraContent(
@@ -82,7 +100,7 @@ fun CameraContent(
                             // Load the image bitmap from the saved Uri
                             val bitmap = BitmapFactory.decodeStream(context.contentResolver.openInputStream(savedUri))
                             imageBitmap.value = bitmap
-                            Log.d("Location", "onImageSaved: ${bitmap.height}, ${bitmap.width}")
+                            Log.d("Locationx", "onImageSaved: ${bitmap.height}, ${bitmap.width}")
                             Toast.makeText(context, "Photo capture succeeded: $savedUri", Toast.LENGTH_SHORT).show()
                         }
 
@@ -121,3 +139,4 @@ fun CameraContent(
             })
     }
 }
+
