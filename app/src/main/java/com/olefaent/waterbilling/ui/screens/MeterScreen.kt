@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.olefaent.waterbilling.R
@@ -66,9 +67,12 @@ fun MeterScreen(
     meterViewModel: MeterViewModel
 ) {
 //    val meterViewModel : MeterViewModel = viewModel(factory = MeterViewModel.Factory)
+    var photoUri: Uri
+
     val uiState = meterViewModel.uiState
     val photoFile = meterViewModel.photo_url.value
-    val mUri = Uri.fromFile(File(photoFile))
+//    val mUri = Uri.fromFile(File(photoFile))
+    val mUri: Uri = Uri.parse(photoFile)
 
     Log.d("MeterScreen photo", "MeterScreen: $mUri")
 
@@ -139,6 +143,11 @@ fun OneMeterScreen(
                     error = painterResource(id = R.drawable.ic_broken_image),
                     placeholder = painterResource(id = R.drawable.loading_img),
                 )
+//                Image(
+//                    painter = rememberAsyncImagePainter(photoFile),
+//                    contentDescription = "Image to display here",
+//                    modifier = Modifier.fillMaxSize()
+//                )
             }
             Column(
                 modifier = modifier

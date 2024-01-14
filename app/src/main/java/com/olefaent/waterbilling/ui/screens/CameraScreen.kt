@@ -22,15 +22,34 @@ fun CameraScreen(
     navController: NavController,
     meterViewModel: MeterViewModel
 ){
-    val cameraPermissionState: PermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
+    val cameraPermissionState: PermissionState = rememberPermissionState(
+        android.Manifest.permission.CAMERA
+    )
+    val readExternalStoragePermissionState: PermissionState = rememberPermissionState(
+        android.Manifest.permission.READ_EXTERNAL_STORAGE
+    )
+
+    val writeExternalStoragePermissionState: PermissionState = rememberPermissionState(
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+//    val cameraPermissionState = rememberPermissionState(
+////        permissions = android.Manifest.permission.CAMERA
+//        listOf(android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//    )
+    var hasPermission = false
+    if (cameraPermissionState.status.isGranted && readExternalStoragePermissionState.status.isGranted && writeExternalStoragePermissionState.status.isGranted){
+        hasPermission = true
+    }
 
     MainContent(
         navController = navController,
         meterId = meterId,
-        hasPermission = cameraPermissionState.status.isGranted,
+        hasPermission = hasPermission,
         meterViewModel = meterViewModel,
         onPermissionRequest = {
             cameraPermissionState.launchPermissionRequest()
+            readExternalStoragePermissionState.launchPermissionRequest()
+            writeExternalStoragePermissionState.launchPermissionRequest()
         }
     )
 }
