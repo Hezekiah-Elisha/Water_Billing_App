@@ -135,19 +135,7 @@ fun OneMeterScreen(
                 
             ){
                 Log.d("PhotoFile", "OneMeterScreen: $photoFile")
-//                AsyncImage(
-////                    model = ImageRequest.Builder(LocalContext.current)
-////                        .data(photoFile)
-////                        .crossfade(true)
-////                        .build(),
-//                    model = photoFile,
-//                    contentDescription = stringResource(R.string.meter_image_description),
-//                    contentScale = ContentScale.Crop,
-//                    modifier = modifier.fillMaxWidth()
-//                        .height(200.dp),
-//                    error = painterResource(id = R.drawable.ic_broken_image),
-//                    placeholder = painterResource(id = R.drawable.loading_img),
-//                )
+
 
                 meterViewModel.bitmap?.let {
                     Image(
@@ -157,13 +145,6 @@ fun OneMeterScreen(
                         contentScale = ContentScale.Crop
                     )
                 }
-
-
-//                Image(
-//                    painter = rememberAsyncImagePainter(photoFile),
-//                    contentDescription = "Image to display here",
-//                    modifier = Modifier.fillMaxSize()
-//                )
             }
             Column(
                 modifier = modifier

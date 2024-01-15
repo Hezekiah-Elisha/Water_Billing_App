@@ -5,6 +5,7 @@ import com.olefaent.waterbilling.model.LoginRequest
 import com.olefaent.waterbilling.model.LoginResponse
 import com.olefaent.waterbilling.model.LogoutResponse
 import com.olefaent.waterbilling.model.Meter
+import com.olefaent.waterbilling.model.Reading
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -27,6 +28,9 @@ interface BillingApiService {
 
     @POST("auth/login")
     suspend fun login(@Body loginRequest: LoginRequest): LoginResponse
+
+    @POST("meters/readings/")
+    suspend fun postReading(@Header("Authorization") token: String, @Body reading: Reading): String
 
     @DELETE("auth/logout")
     suspend fun logout(@Header("Authorization") token: String): LogoutResponse
